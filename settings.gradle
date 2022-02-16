@@ -5,6 +5,8 @@ pluginManagement {
         mavenCentral()
     }
 }
+
+/*
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
@@ -12,5 +14,10 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
+
+esto esta comentado porque me daba el error de esta pagina al implementar firebase y asi es como lo resolvian
+https://stackoverflow.com/questions/69163511/build-was-configured-to-prefer-settings-repositories-over-project-repositories-b
+
+ */
 rootProject.name = "ProyectoMapas"
 include ':app'

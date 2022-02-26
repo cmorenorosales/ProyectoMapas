@@ -16,7 +16,13 @@
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="match_parent"
-        android:layout_height="522dp" />
+        android:layout_height="447dp" />
+
+    <Button
+        android:id="@+id/Imagen"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Button" />
 
     <EditText
         android:id="@+id/NombreImagen"
@@ -26,4 +32,5 @@
         android:inputType="textPersonName"
         android:minHeight="48dp"
         tools:ignore="SpeakableTextPresentCheck" />
+
 </LinearLayout>

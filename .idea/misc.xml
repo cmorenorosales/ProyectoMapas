@@ -4,19 +4,15 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/2022/PMDM/ProyectoMapass/app/src/main/res/layout/activity_camara.xml" value="0.3333333333333333" />
-        <entry key="..\:/ProyectoMapas/app/src/main/res/drawable/bg_botones.xml" value="0.2265" />
-        <entry key="..\:/ProyectoMapas/app/src/main/res/drawable/ic_toggle_bg.xml" value="0.124" />
-        <entry key="..\:/ProyectoMapas/app/src/main/res/layout/activity_inicio_sesion.xml" value="0.2" />
-        <entry key="..\:/ProyectoMapas/app/src/main/res/layout/activity_inicio_sesion2.xml" value="0.22826086956521738" />
-        <entry key="..\:/ProyectoMapas/app/src/main/res/layout/activity_registrar.xml" value="0.264" />
         <entry key="..\:/Users/Lofly/AndroidStudioProjects/ProyectoMapas/app/src/main/res/layout/activity_mapa.xml" value="0.1" />
+        <entry key="..\:/Users/Lofly/AndroidStudioProjects/ProyectoMapas/app/src/main/res/layout/activity_registrar.xml" value="0.2015625" />
         <entry key="..\:/Users/Lofly/AndroidStudioProjects/ProyectoMapas/app/src/main/res/layout/custom_info_contents.xml" value="0.1" />
         <entry key="..\:/Users/Lofly/AndroidStudioProjects/ProyectoMapas/app/src/main/res/layout/custom_info_window.xml" value="0.27445652173913043" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1585612968591692" />
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

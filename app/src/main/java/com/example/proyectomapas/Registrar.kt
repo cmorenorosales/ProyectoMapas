@@ -7,34 +7,37 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 class Registrar : AppCompatActivity() {
     private lateinit var eTxtCorreo:EditText
     private lateinit var eTextPassword:EditText
     private lateinit var eTextPassword2:EditText
     private lateinit var btnRegistrar:Button
-    private lateinit var eTextInicarSesion:EditText
+    private lateinit var eTextInicarSesion:TextView
     private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_registrar)
-        eTxtCorreo.findViewById<EditText>(R.id.eTextCorreo)
-        eTextPassword.findViewById<EditText>(R.id.eTextPassword1)
-        eTextPassword2.findViewById<EditText>(R.id.eTextPassword2)
-        btnRegistrar.findViewById<Button>(R.id.btnRegistrarse)
-        eTextInicarSesion.findViewById<EditText>(R.id.eTextIniciarSesion)
-
+        eTxtCorreo=findViewById<EditText>(R.id.eTextCorreo)
+        eTextPassword=findViewById<EditText>(R.id.eTextPassword1)
+        eTextPassword2=findViewById<EditText>(R.id.eTextPassword2)
+        btnRegistrar=findViewById<Button>(R.id.btnRegistrarse)
+        eTextInicarSesion=findViewById<EditText>(R.id.eTextIniciarSesion)
+        auth= Firebase.auth
         eTextInicarSesion.setOnClickListener{
             val intent = Intent(this,InicioSesion::class.java)
             startActivity(intent)
         }
         btnRegistrar.setOnClickListener{
             if(android.util.Patterns.EMAIL_ADDRESS.matcher(eTxtCorreo.text.toString()).matches()){
-                if (eTextPassword==eTextPassword2){
+                if (eTextPassword.text.toString().equals(eTextPassword2.text.toString())){
                     if(eTextPassword.length()>=6){
 
                         crearuser(eTextPassword.text.toString(),eTxtCorreo.text.toString())

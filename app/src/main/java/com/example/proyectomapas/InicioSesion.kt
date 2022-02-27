@@ -8,6 +8,8 @@ import android.widget.EditText
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 class InicioSesion : AppCompatActivity() {
     private lateinit var btnRegistrarse:Button
@@ -21,21 +23,25 @@ class InicioSesion : AppCompatActivity() {
         val currentUser=auth.currentUser
         if(currentUser!=null){
             val intent=Intent(this,mapa::class.java)
+            startActivity(intent)
+            
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_inicio_sesion)
-        btnInicar.findViewById<Button>(R.id.btnRegistrarse)
-        eTextCorreo.findViewById<EditText>(R.id.eTextCorreo)
-        eTxtPassword.findViewById<EditText>(R.id.eTextPassword)
-        btnRegistrarse.findViewById<Button>(R.id.btnRegistrarse)
-
+        btnInicar=findViewById<Button>(R.id.btnInicar)
+        eTextCorreo=findViewById<EditText>(R.id.eTextCorreo)
+        eTxtPassword=findViewById<EditText>(R.id.eTextPassword)
+        btnRegistrarse=findViewById<Button>(R.id.btnRegistrarse)
+        auth=Firebase.auth
         btnInicar.setOnClickListener{
             if(android.util.Patterns.EMAIL_ADDRESS.matcher(eTextCorreo.text.toString()).matches()){
-                inicarSesion(eTextCorreo.text.toString(),eTxtPassword.text.toString())
+                inicarSesion(eTxtPassword.text.toString(),eTextCorreo.text.toString())
             }
+            else Toast.makeText(baseContext, "patatin",
+                Toast.LENGTH_SHORT).show()
         }
 
         btnRegistrarse.setOnClickListener{
@@ -50,6 +56,7 @@ class InicioSesion : AppCompatActivity() {
                 if (task.isSuccessful){
                     val user = auth.currentUser
                     val intent=Intent(this,mapa::class.java)
+                    startActivity(intent)
                     updateUI(user)
             }else{
                 updateUI(null)

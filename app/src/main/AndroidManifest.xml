@@ -15,11 +15,17 @@
         android:theme="@style/Theme.ProyectoMapas">
         <activity
             android:name=".Registrar"
-            android:exported="false" />
+            android:exported="false" >
+        </activity>
         <activity
             android:name=".InicioSesion"
-            android:exported="false" />
+            android:exported="true" >
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
 
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+        </activity>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
@@ -27,11 +33,7 @@
         <activity
             android:name=".mapa"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".Camara"

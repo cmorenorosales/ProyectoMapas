@@ -102,4 +102,7 @@ class Camara : AppCompatActivity() {
 
         }
     }
+
+
+
 }

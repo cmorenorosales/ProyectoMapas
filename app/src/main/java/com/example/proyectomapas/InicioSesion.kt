@@ -1,11 +1,14 @@
 package com.example.proyectomapas
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
@@ -17,15 +20,19 @@ class InicioSesion : AppCompatActivity() {
     private lateinit var eTextCorreo:EditText
     private lateinit var eTxtPassword:EditText
     private lateinit var btnInicar:Button
+    private  var permisoobtenido : Boolean =false
+    companion object {
+        const val REQUEST_CODE_LOCATION = 0
+    }
 
     override fun onStart() {
         super.onStart()
         val currentUser=auth.currentUser
-        if(currentUser!=null){
+       /* if(currentUser!=null){
             val intent=Intent(this,mapa::class.java)
             startActivity(intent)
             
-        }
+        }*/
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,6 +43,7 @@ class InicioSesion : AppCompatActivity() {
         eTxtPassword=findViewById<EditText>(R.id.eTextPassword)
         btnRegistrarse=findViewById<Button>(R.id.btnRegistrarse)
         auth=Firebase.auth
+        requestLocationPermission()
         btnInicar.setOnClickListener{
             if(android.util.Patterns.EMAIL_ADDRESS.matcher(eTextCorreo.text.toString()).matches()){
                 inicarSesion(eTxtPassword.text.toString(),eTextCorreo.text.toString())
@@ -50,13 +58,49 @@ class InicioSesion : AppCompatActivity() {
         }
     }
 
+    //funciones de permisos
+    private fun requestLocationPermission() {
+
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)) {
+            Toast.makeText(this, "Ve a ajustes y acepta los permisos", Toast.LENGTH_SHORT).show()
+            permisoobtenido=false
+        } else {
+            ActivityCompat.requestPermissions(this,
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                mapa.REQUEST_CODE_LOCATION
+            )
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when(requestCode){
+            mapa.REQUEST_CODE_LOCATION -> if(grantResults.isNotEmpty() && grantResults[0]== PackageManager.PERMISSION_GRANTED){
+                permisoobtenido = true
+            }else{
+                Toast.makeText(this, "Para activar la localización ve a ajustes y acepta los permisos", Toast.LENGTH_SHORT).show()
+            }
+            else -> {}
+        }
+    }
+
+
     fun inicarSesion(pass:String,correo:String){
         auth.signInWithEmailAndPassword(correo,pass).addOnCompleteListener(this){
             task ->
                 if (task.isSuccessful){
                     val user = auth.currentUser
                     val intent=Intent(this,mapa::class.java)
-                    startActivity(intent)
+                    //pido permisos de localizacion ANTES de lanzar el mapa
+                    if (permisoobtenido)
+                        startActivity(intent)
+                    else
+                        Toast.makeText(this, "Necesitas activar la localización y sus permisos, ve a ajustes y aceptalos", Toast.LENGTH_SHORT).show()
                     updateUI(user)
             }else{
                 updateUI(null)

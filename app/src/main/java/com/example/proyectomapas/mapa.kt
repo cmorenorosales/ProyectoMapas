@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -20,7 +21,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 
-class mapa : AppCompatActivity() , OnMapReadyCallback {
+class mapa : AppCompatActivity() , OnMapReadyCallback ,GoogleMap.OnMyLocationButtonClickListener,GoogleMap.OnMyLocationClickListener{
     private lateinit var  map: GoogleMap
     private lateinit var markerimagen: MutableMap<LatLng, Bitmap>
     companion object {
@@ -41,9 +42,12 @@ class mapa : AppCompatActivity() , OnMapReadyCallback {
 
     //funcion implementada por la interfaz de onmapreadycallback
     override fun onMapReady(p0: GoogleMap) {
+
         map=p0
-        createMarker()
+        map.setOnMyLocationButtonClickListener (this)
+        map.setOnMyLocationClickListener (this)
         enableMyLocation()
+        createMarker()
     }
 
     //funcion crear marcador
@@ -74,6 +78,9 @@ class mapa : AppCompatActivity() , OnMapReadyCallback {
         map.addMarker(marker2)
         //el mapa hace zoom con una animacion de 5000 milisegundos al punto de coordenadas
         //todo sustituir coordenadas por la posicion del mapa en la que estamos
+
+        // no se puede conseguir las coordenadas
+        //var misCoordenadas=LatLng(map.getMyLocation().latitude,map.myLocation.longitude)
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(coordenadas,18f),5000,null)
 
     }
@@ -160,9 +167,7 @@ class mapa : AppCompatActivity() , OnMapReadyCallback {
 
             // badge sera la variable donde guardemos el bitmap
 
-            var badge= BitmapFactory.decodeResource(resources,R.drawable.fondo_konata)
-            // si el badge contiene un bitmap como he indicado antes, se mete la foto en el imageview
-            badge=markerimagen.get(marker.position)
+            var badge=markerimagen.get(marker.position)
 
             view.findViewById<ImageView>(R.id.imagen).setImageBitmap(badge)
 
@@ -180,5 +185,14 @@ class mapa : AppCompatActivity() , OnMapReadyCallback {
             */
         }
 
+    }
+
+    override fun onMyLocationButtonClick(): Boolean {
+        Toast.makeText(this, "on my location click llamado", Toast.LENGTH_SHORT).show()
+        return false
+    }
+
+    override fun onMyLocationClick(p0: Location) {
+        Toast.makeText(this, "on my location click llamado", Toast.LENGTH_SHORT).show()
     }
 }

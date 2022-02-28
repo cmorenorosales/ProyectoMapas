@@ -23,10 +23,23 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.component1
+import com.google.firebase.storage.ktx.component2
+import com.google.firebase.storage.ktx.storage
 
 class mapa : AppCompatActivity() , OnMapReadyCallback ,GoogleMap.OnMyLocationButtonClickListener,GoogleMap.OnMyLocationClickListener{
     private lateinit var  map: GoogleMap
-    private lateinit var markerimagen: MutableMap<LatLng, Bitmap>
+    private  var markerimagen: MutableMap<LatLng, Bitmap> = mutableMapOf(    )
+
+    val storage = Firebase.storage("gs://proyectomapas-f8be8.appspot.com")
+    var storageRef = storage.reference
+    var imagesRef = storageRef.child("images")
+
+    companion object {
+        const val REQUEST_CODE_LOCATION = 0
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,38 +66,11 @@ class mapa : AppCompatActivity() , OnMapReadyCallback ,GoogleMap.OnMyLocationBut
 
     //funcion crear marcador
     private fun createMarker(){
-        //coordenadas del marcador en latitud longitud
-        val coordenadas= LatLng(40.319185528083196, -3.477578675340428)
-        val coordenadas2= LatLng(40.31772510790302, -3.4776298075467387)
-        //creas un marcador con esas coordenadas y con el titulo de marcador
-        val marker : MarkerOptions = MarkerOptions().position(coordenadas).title("patata")
-        val marker2 : MarkerOptions = MarkerOptions().position(coordenadas2).title("patata2")
-        //imagen=bitmap
-        //añado al marcador la ui de la ventana de informacion
+
+        buscarImagenes()
+
         map.setInfoWindowAdapter(CustomInfoWindowAdapter())
 
-        val badge= BitmapFactory.decodeResource(resources,R.drawable.p1110594)
-        val badge2= BitmapFactory.decodeResource(resources,R.drawable.fondo_konata)
-
-        markerimagen = mutableMapOf(
-            marker.position to badge
-
-        )
-
-
-        markerimagen.put(marker2.position ,badge2)
-
-        //aniades el marcador al mapa
-        map.addMarker(marker)
-        map.addMarker(marker2)
-        //el mapa hace zoom con una animacion de 5000 milisegundos al punto de coordenadas
-        //todo sustituir coordenadas por la posicion del mapa en la que estamos
-
-        // no se puede conseguir las coordenadas
-        //var misCoordenadas=LatLng(map.getMyLocation().latitude,map.myLocation.longitude)
-
-
-        map.animateCamera(CameraUpdateFactory.newLatLngZoom(coordenadas,18f),5000,null)
 
     }
 
@@ -196,7 +182,76 @@ class mapa : AppCompatActivity() , OnMapReadyCallback ,GoogleMap.OnMyLocationBut
     }
 
     override fun onMyLocationClick(p0: Location) {
+
         val intent = Intent(this,Camara::class.java)
+
+        intent.putExtra("latitud",p0.latitude.toString())
+        intent.putExtra("longitud",p0.longitude.toString())
         startActivity(intent)
+        finish();
+    }
+
+    //funcion buscar imagenes pintar marcadores
+    private fun buscarImagenes() {
+        // You'll need to import com.google.firebase.storage.ktx.component1 and
+        // com.google.firebase.storage.ktx.component2
+
+        var latitud : Double = 0.0
+        var longitud : Double = 0.0
+        var tit : String=""
+        var coorde:LatLng = LatLng(0.0,0.0)
+        var markador : MarkerOptions
+        var badge= BitmapFactory.decodeResource(resources,R.drawable.p1110594)
+
+        imagesRef.listAll()
+            .addOnSuccessListener { (items, prefixes) ->
+                prefixes.forEach { prefix ->
+                    // All the prefixes under listRef.
+                    // You may call listAll() recursively on them.
+                }
+
+                //recogemos una por una las rutas de todas las fotos
+                items.forEach { item ->
+                    //patata guarda la ruta del item
+                    var patata=storage.getReferenceFromUrl(item.toString())
+                    //constante para el tamaño de las imagenes
+                    val ONE_MEGABYTE: Long = 10024 * 10024
+
+                    //recogemos la imagen de el item tratado
+                    patata.getBytes(ONE_MEGABYTE).addOnSuccessListener{
+                            d->
+
+                            //si hemos podido coger la imagen  intentamos coger los metadatos del item que tiene esa imagen
+                            item.metadata.addOnSuccessListener { f->
+                                //guardamos latitud longitud y titulo
+                                if (f.getCustomMetadata("latitud")!=null) {
+                                    latitud = f.getCustomMetadata("latitud").toString().toDouble();
+                                    if (f.getCustomMetadata("longitud") != null) {
+                                        longitud = f.getCustomMetadata("longitud").toString().toDouble();
+                                        tit = f.getCustomMetadata("titulo").toString();
+                                        //creamos  un marcador con las coordenadas
+                                        coorde = LatLng(latitud, longitud)
+                                        markador = MarkerOptions().position(coorde).title(tit)
+
+                                        badge = BitmapFactory.decodeByteArray(d, 0, d.size)
+
+                                        //guardo en el mapa la posicion del marcador con su foto asociada
+                                        markerimagen.put(markador.position, badge)
+
+                                        //pongo el marcador en el mapa
+                                        map.addMarker(markador)
+                                    }
+                                }
+                            }
+                    }
+                }
+            }
+            .addOnFailureListener {
+                // Uh-oh, an error occurred!
+            }
+
+
+
     }
 }
+

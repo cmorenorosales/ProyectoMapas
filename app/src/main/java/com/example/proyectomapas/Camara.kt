@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -30,7 +31,8 @@ class Camara : AppCompatActivity() {
     lateinit var btnImagen : Button
     lateinit var imgView : ImageView
     lateinit var tituloImg : EditText
-
+    var latitud :Double=0.0
+    var longitud :Double=0.0
     val storage = Firebase.storage("gs://proyectomapas-f8be8.appspot.com")
     var storageRef = storage.reference
     var imagesRef = storageRef.child("images")
@@ -45,9 +47,14 @@ class Camara : AppCompatActivity() {
         btnImagen = findViewById(R.id.Imagen)
         imgView = findViewById(R.id.imageView)
         btnCamara.setOnClickListener(View.OnClickListener { abrirCamara() })
-        btnImagen.setOnClickListener(View.OnClickListener { buscarImagenes() })
+        btnImagen.setOnClickListener(View.OnClickListener { volverAlmapa() })
         tituloImg = findViewById(R.id.NombreImagen)
         requestPermission()
+        Log.d("pruebas a mano", "chivato on create")
+
+        latitud=intent.getStringExtra("latitud").toString().toDouble()
+
+        longitud=intent.getStringExtra("longitud").toString().toDouble()
 
     }
 
@@ -77,43 +84,38 @@ class Camara : AppCompatActivity() {
     private fun abrirCamara() {
         if(ContextCompat.checkSelfPermission(this,Manifest.permission.CAMERA)==PackageManager.PERMISSION_GRANTED){
             val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-            startActivity(intent)
+
+
+            startActivityForResult(intent, 1)
+            if (intent.resolveActivity(packageManager) != null) {
+                Log.d("pruebas a mano", "abriendo camara")
+
+            }
         }else{
-            Toast.makeText(this, "Ve a ajustes y acepta los permisos", Toast.LENGTH_SHORT).show()
+            Log.d("pruebas a mano", "no se ha podido abrir camara ")
         }
 
     }
 
-    private fun buscarImagenes() {
-        // You'll need to import com.google.firebase.storage.ktx.component1 and
-        // com.google.firebase.storage.ktx.component2
-        imagesRef.listAll()
-            .addOnSuccessListener { (items, prefixes) ->
-                prefixes.forEach { prefix ->
-                    // All the prefixes under listRef.
-                    // You may call listAll() recursively on them.
-                }
+    fun volverAlmapa(){
 
-                items.forEach { item ->
-                        var patata=storage.getReferenceFromUrl(item.toString())
-                        val ONE_MEGABYTE: Long = 10024 * 10024
+        val intent = Intent(this,mapa::class.java)
+        startActivity(intent)
+        finish();
 
-                        patata.getBytes(ONE_MEGABYTE).addOnSuccessListener{
-                            d->
-                            imgView!!.setImageBitmap(BitmapFactory.decodeByteArray(d,0,d.size))
-                        }
-                }
-            }
-            .addOnFailureListener {
-                // Uh-oh, an error occurred!
-            }
     }
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         imagesRef = storageRef.child("images")
 
+        Log.d("pruebas a mano", "chivato on activity result camera")
+
         if (requestCode == 1 && resultCode == RESULT_OK) {
+
+            Log.d("pruebas a mano", "result ok")
+
             val extras = data!!.extras
             val imgBitmap = extras!!["data"] as Bitmap?
             imgView!!.setImageBitmap(imgBitmap)
@@ -124,8 +126,9 @@ class Camara : AppCompatActivity() {
             }
 
             val metadata = storageMetadata {
-                setCustomMetadata("latituz", "98127498127")
-                setCustomMetadata("longitud","-1312321312")
+                setCustomMetadata("latitud", latitud.toString())
+                setCustomMetadata("longitud",longitud.toString())
+                setCustomMetadata("titulo",tituloImg.text.toString())
             }
 
             val fileName = tituloImg.text.toString()+".jpg"
@@ -133,6 +136,7 @@ class Camara : AppCompatActivity() {
 
             val data = baos.toByteArray()
             spaceRef.putBytes(data,metadata)
+
 
         }
     }

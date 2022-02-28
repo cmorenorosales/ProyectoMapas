@@ -27,9 +27,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 class mapa : AppCompatActivity() , OnMapReadyCallback ,GoogleMap.OnMyLocationButtonClickListener,GoogleMap.OnMyLocationClickListener{
     private lateinit var  map: GoogleMap
     private lateinit var markerimagen: MutableMap<LatLng, Bitmap>
-    companion object {
-        const val REQUEST_CODE_LOCATION = 0
-    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_mapa)
@@ -117,7 +115,7 @@ class mapa : AppCompatActivity() , OnMapReadyCallback ,GoogleMap.OnMyLocationBut
         } else {
             ActivityCompat.requestPermissions(this,
                 arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                REQUEST_CODE_LOCATION)
+                InicioSesion.permisos)
         }
     }
 
@@ -130,7 +128,7 @@ class mapa : AppCompatActivity() , OnMapReadyCallback ,GoogleMap.OnMyLocationBut
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when(requestCode){
-            REQUEST_CODE_LOCATION -> if(grantResults.isNotEmpty() && grantResults[0]== PackageManager.PERMISSION_GRANTED){
+            InicioSesion.permisos -> if(grantResults.isNotEmpty() && grantResults[0]== PackageManager.PERMISSION_GRANTED){
                 map.isMyLocationEnabled = true
             }else{
                 Toast.makeText(this, "Para activar la localización ve a ajustes y acepta los permisos", Toast.LENGTH_SHORT).show()

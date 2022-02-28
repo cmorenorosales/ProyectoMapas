@@ -48,6 +48,8 @@ class mapa : AppCompatActivity() , OnMapReadyCallback ,GoogleMap.OnMyLocationBut
 
     }
 
+    override fun onBackPressed() {}
+
     private fun createfragment(){
 
         val mapFragment : SupportMapFragment = supportFragmentManager.findFragmentById(R.id.fragmentMap) as SupportMapFragment

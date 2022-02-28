@@ -8,6 +8,20 @@
     tools:context=".Registrar">
 
 
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/appCompatImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:scaleType="center"
+        android:src="@mipmap/ic_launcher_tierra_foreground"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.056" />
+
     <EditText
         android:id="@+id/eTextCorreo"
         android:layout_width="325dp"
@@ -17,8 +31,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.251" />
+        app:layout_constraintTop_toBottomOf="@+id/appCompatImageView"
+        app:layout_constraintVertical_bias="0.063" />
 
     <EditText
         android:id="@+id/eTextPassword1"
@@ -82,7 +96,7 @@
     <androidx.constraintlayout.utils.widget.ImageFilterView
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:src="@drawable/ic_user"
+        android:src="@drawable/ic_mail"
         app:layout_constraintBottom_toBottomOf="@+id/eTextCorreo"
         app:layout_constraintEnd_toEndOf="@+id/eTextCorreo"
         app:layout_constraintHorizontal_bias="0.979"

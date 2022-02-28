@@ -1,8 +1,6 @@
 package com.example.proyectomapas
 
 import android.Manifest
-import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
@@ -10,7 +8,6 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.firebase.auth.FirebaseAuth
@@ -66,6 +63,8 @@ class InicioSesion : AppCompatActivity() {
             startActivity(intent)
         }
     }
+
+    override fun onBackPressed() {}
 
     //funciones de permisos
     private fun requestPermission() {

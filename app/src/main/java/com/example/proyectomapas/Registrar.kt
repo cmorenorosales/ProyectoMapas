@@ -56,6 +56,7 @@ class Registrar : AppCompatActivity() {
 
         }
     }
+    override fun onBackPressed() {}
 
     fun crearuser(pass: String,correo: String){
 

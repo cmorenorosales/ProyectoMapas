@@ -28,7 +28,7 @@ class Camara : AppCompatActivity() {
 
 
     lateinit var btnCamara : Button
-    lateinit var btnImagen : Button
+    lateinit var btnAtras : Button
     lateinit var imgView : ImageView
     lateinit var tituloImg : EditText
     var latitud :Double=0.0
@@ -44,10 +44,10 @@ class Camara : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_camara)
         btnCamara = findViewById(R.id.btnCamara)
-        btnImagen = findViewById(R.id.Imagen)
         imgView = findViewById(R.id.imageView)
+        btnAtras=findViewById(R.id.btnAtras)
         btnCamara.setOnClickListener(View.OnClickListener { abrirCamara() })
-        btnImagen.setOnClickListener(View.OnClickListener { volverAlmapa() })
+        btnAtras.setOnClickListener(View.OnClickListener { volverAlmapa() })
         tituloImg = findViewById(R.id.NombreImagen)
         requestPermission()
         Log.d("pruebas a mano", "chivato on create")
@@ -57,6 +57,8 @@ class Camara : AppCompatActivity() {
         longitud=intent.getStringExtra("longitud").toString().toDouble()
 
     }
+
+    override fun onBackPressed() {}
 
     private fun requestPermission(){
         if (ActivityCompat.shouldShowRequestPermissionRationale(this,

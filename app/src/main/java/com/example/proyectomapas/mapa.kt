@@ -1,10 +1,13 @@
 package com.example.proyectomapas
 
 import android.Manifest
+import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.location.Location
+import android.location.LocationManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -81,6 +84,8 @@ class mapa : AppCompatActivity() , OnMapReadyCallback ,GoogleMap.OnMyLocationBut
 
         // no se puede conseguir las coordenadas
         //var misCoordenadas=LatLng(map.getMyLocation().latitude,map.myLocation.longitude)
+
+
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(coordenadas,18f),5000,null)
 
     }
@@ -188,11 +193,12 @@ class mapa : AppCompatActivity() , OnMapReadyCallback ,GoogleMap.OnMyLocationBut
     }
 
     override fun onMyLocationButtonClick(): Boolean {
-        Toast.makeText(this, "on my location click llamado", Toast.LENGTH_SHORT).show()
+
         return false
     }
 
     override fun onMyLocationClick(p0: Location) {
-        Toast.makeText(this, "on my location click llamado", Toast.LENGTH_SHORT).show()
+        val intent = Intent(this,Camara::class.java)
+        startActivity(intent)
     }
 }
